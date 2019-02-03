@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="86dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/conversation_icon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"/>
+
+    <ImageView
+        android:id="@+id/online_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="62dp"
+        android:layout_alignParentBottom="true"
+        />
+    <TextView
+        android:id="@+id/conversation_title"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        android:gravity="bottom"
+        android:textColor="@color/black"
+        android:layout_toStartOf="@+id/conversation_last_msg_date"
+        android:layout_toEndOf="@+id/conversation_icon"/>
+    <TextView
+        android:id="@+id/conversation_last_msg_date"
+        android:layout_width="75dp"
+        android:layout_height="22dp"
+        android:textSize="12sp"
+        android:layout_margin="8dp"
+        android:gravity="bottom"
+        android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toEndOf="@+id/conversation_icon"
+        android:layout_toStartOf="@+id/unread_count"
+        android:layout_below="@+id/conversation_title">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/conversation_last_msg_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/conversation_last_msg_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:maxLines="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/unread_count"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textColor="@color/linkText"
+        android:textSize="18sp"
+        android:background="@drawable/bg_unread"
+        android:layout_below="@+id/conversation_last_msg_date"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"/>
+
+    <View
+        android:id="@+id/outbox_unreaded"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/bg_unread"
+        android:layout_below="@+id/conversation_last_msg_date"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_toEndOf="@+id/conversation_icon"
+        android:layout_height="1dp"
+        android:background="#BBB9B9"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

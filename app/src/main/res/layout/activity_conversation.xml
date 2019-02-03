@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".conversation.ConversationActivity">
+
+    <ImageView
+        android:id="@+id/conversationMenu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/main_blue" />
+
+    <Button
+        android:id="@+id/backToMessagesButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bt_back"
+        android:backgroundTint="@color/linkText"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/peerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/linkText"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/peerOnlineState"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/linkText"
+        android:layout_below="@+id/peerTitle" />
+
+    <ImageView
+        android:id="@+id/peerOnlineMobileIcon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:backgroundTint="@color/linkText"
+
+        android:layout_below="@+id/peerTitle"
+        android:layout_toEndOf="@+id/peerOnlineState"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/conv_history_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/editText"
+        android:layout_below="@+id/conversationMenu"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:textSize="18sp"
+        android:background="@drawable/bg_message_edit_text"
+        android:ems="10"
+        android:hint="@string/message_et"
+        android:inputType="textMultiLine"
+        android:minHeight="30dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:layout_toEndOf="@+id/editText"
+        android:background="@drawable/ic_send" />
+
+</RelativeLayout>

@@ -1,0 +1,18 @@
+package com.iskhakovayrat.aivk.main;
+
+import com.iskhakovayrat.aivk.retrofit.newsfeed.Response;
+
+public interface MainView {
+
+    void showPosts(Response response);
+
+    void addPosts(Response response);
+
+    void openLink(String url);
+
+    void openVideo(String url);
+
+    void playAudio();
+
+    void startLoginActivityAndFinish();
+}
