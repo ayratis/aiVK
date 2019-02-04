@@ -1,7 +1,6 @@
 package com.iskhakovayrat.aivk.main;
 
-import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Attachments;
+import com.iskhakovayrat.aivk.model.newsfeed.Attachments;
 
 import io.reactivex.disposables.Disposable;
 
@@ -16,16 +15,14 @@ public class MainPresenter {
 
     private String nextFrom;
 
-    private TokenHolder tokenHolder;
 
-    public MainPresenter(TokenHolder tokenHolder) {
-        this.tokenHolder = tokenHolder;
-        model = new MainModel(tokenHolder);
+    public MainPresenter(MainModel mainModel) {
+        model = mainModel;
     }
 
     public void attach(MainView mainView) {
         this.mainView = mainView;
-        if(tokenHolder.isUserAuthorized()) {
+        if(model.getTokenHolder().isUserAuthorized()) {
             loadNewsFeed(10);
         } else {
             mainView.startLoginActivityAndFinish();

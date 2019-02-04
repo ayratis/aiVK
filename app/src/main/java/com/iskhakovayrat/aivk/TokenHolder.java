@@ -11,8 +11,8 @@ public class TokenHolder {
     @NonNull
     private final SharedPreferences sp;
 
-    public TokenHolder(@NonNull Context context) {
-        sp = context.getSharedPreferences("token_holder", Context.MODE_PRIVATE);
+    public TokenHolder(SharedPreferences sp) {
+        this.sp = sp;
     }
 
     public void saveSession(@NonNull String userId, @NonNull String token) {

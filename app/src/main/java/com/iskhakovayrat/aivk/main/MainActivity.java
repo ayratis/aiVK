@@ -12,14 +12,17 @@ import com.iskhakovayrat.aivk.LoadMore;
 import com.iskhakovayrat.aivk.NewsfeedAdapter;
 import com.iskhakovayrat.aivk.OnAttachmentClickListener;
 import com.iskhakovayrat.aivk.R;
-import com.iskhakovayrat.aivk.TokenHolder;
+import com.iskhakovayrat.aivk.di.Injector;
 import com.iskhakovayrat.aivk.login.LoginActivity;
 import com.iskhakovayrat.aivk.messages.MessagesActivity;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Response;
+import com.iskhakovayrat.aivk.model.newsfeed.Response;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-    private MainPresenter presenter;
+    @Inject
+    MainPresenter presenter;
 
     private RecyclerView newsfeedRecycler;
     private Button messagesButton;
@@ -32,10 +35,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new MainPresenter(new TokenHolder(this));
         presenter.attach(this);
 
         newsfeedRecycler = findViewById(R.id.newsfeedRecyclerView);
@@ -63,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void showPosts(com.iskhakovayrat.aivk.retrofit.newsfeed.Response response) {
-        adapter = new NewsfeedAdapter(response, onAttachmentClickListener, loadMore, new TokenHolder(this));
+    public void showPosts(com.iskhakovayrat.aivk.model.newsfeed.Response response) {
+        adapter = new NewsfeedAdapter(response, onAttachmentClickListener, loadMore);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         newsfeedRecycler.setLayoutManager(layoutManager);
         newsfeedRecycler.setAdapter(adapter);

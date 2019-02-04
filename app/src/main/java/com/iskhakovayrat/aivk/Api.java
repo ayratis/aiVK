@@ -1,21 +1,19 @@
 package com.iskhakovayrat.aivk;
 
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistory;
-import com.iskhakovayrat.aivk.retrofit.groups.getById.GroupsGetById;
-import com.iskhakovayrat.aivk.retrofit.longpoll.LongPollHistory;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPoll;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPollServer;
-import com.iskhakovayrat.aivk.retrofit.messages.send.SendMessageResult;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.NewsfeedResponse;
-import com.iskhakovayrat.aivk.retrofit.users.get.UsersGet;
-import com.iskhakovayrat.aivk.retrofit.video.VideoResponseResponse;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistory;
+import com.iskhakovayrat.aivk.model.groups.getById.GroupsGetById;
+import com.iskhakovayrat.aivk.model.longpoll.LongPollHistory;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPollServer;
+import com.iskhakovayrat.aivk.model.messages.send.SendMessageResult;
+import com.iskhakovayrat.aivk.model.newsfeed.NewsfeedResponse;
+import com.iskhakovayrat.aivk.model.users.get.UsersGet;
+import com.iskhakovayrat.aivk.model.video.VideoResponseResponse;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 
@@ -26,12 +24,7 @@ public interface Api {
     String ACCESSTOKEN = "98b6f646fe5b8380ac1940d5c1d55f8264e79087ecd6bd3233fa8581280886838aaf5340da111cea5fae9";
     String EXTENDED_YES = "1";
     String NEED_PTS_YES = "1";
-    int LONGPOLL_DEFAULT_WAIT = 25;
-    int LONGPOLL_DEFAULT_MODE = 2;
     String V = "5.80";
-    String BASE_LONGPOLL_URL = "https://imv4.vk.com/";
-    String ACT = "a_check";
-    String VERSION_LONGPOLL_DEFAULT = "2";
 
 
     @GET("https://api.vk.com/method/newsfeed.get")
@@ -56,15 +49,6 @@ public interface Api {
     Observable<LongPollServer> getLongPollServer(@Query("access_token") String accessToken,
                                                  @Query("v") String version,
                                                  @Query("need_pts") String need_pts);
-
-    @GET("{server}")
-    Observable<LongPoll> longPolling(@Path ("server") String server,
-                                     @Query("act") String act,
-                                     @Query("key") String key,
-                                     @Query("ts") int ts,
-                                     @Query("wait") int wait,
-                                     @Query("mode") int mode,
-                                     @Query("version") String version);
 
     @GET("https://api.vk.com/method/messages.getConversations")
     Observable<ConversationGet> getConversations(@Query("access_token") String accessToken,

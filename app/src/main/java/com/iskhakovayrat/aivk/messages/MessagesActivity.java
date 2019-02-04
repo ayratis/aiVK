@@ -1,30 +1,29 @@
 package com.iskhakovayrat.aivk.messages;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.iskhakovayrat.aivk.LoadMore;
 import com.iskhakovayrat.aivk.MessagesRecyclerAdapter;
 import com.iskhakovayrat.aivk.OnDialogClickListener;
 import com.iskhakovayrat.aivk.R;
-import com.iskhakovayrat.aivk.TokenHolder;
 import com.iskhakovayrat.aivk.conversation.ConversationActivity;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.di.Injector;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
+
+import javax.inject.Inject;
 
 public class MessagesActivity extends AppCompatActivity implements MessagesView {
 
+    @Inject MessagesPresenter presenter;
+
     private RecyclerView messagesRecycler;
     private Button backButton;
-
-    private MessagesPresenter messagesPresenter;
 
     private OnDialogClickListener onDialogClickListener;
 
@@ -34,24 +33,24 @@ public class MessagesActivity extends AppCompatActivity implements MessagesView 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
         messagesRecycler = findViewById(R.id.messages_recycler);
-        messagesPresenter = new MessagesPresenter(new TokenHolder(this));
-        messagesPresenter.attach(this);
+        presenter.attach(this);
 
         backButton = findViewById(R.id.back_to_newsfeed_button);
         backButton.setOnClickListener(v -> finish());
 
-        onDialogClickListener = peerId -> messagesPresenter.getDialog(peerId);
-        loadMore = nextMessageId -> messagesPresenter.loadConversationsNext(nextMessageId);
+        onDialogClickListener = peerId -> presenter.getDialog(peerId);
+        loadMore = nextMessageId -> presenter.loadConversationsNext(nextMessageId);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        messagesPresenter.detach();
+        presenter.detach();
     }
 
     @Override
@@ -70,13 +69,13 @@ public class MessagesActivity extends AppCompatActivity implements MessagesView 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        messagesPresenter.attach(this);
+        presenter.attach(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        messagesPresenter.detach();
+        presenter.detach();
     }
 
     @Override

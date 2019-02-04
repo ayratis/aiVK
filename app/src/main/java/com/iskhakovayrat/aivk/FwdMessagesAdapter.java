@@ -10,50 +10,40 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.iskhakovayrat.aivk.retrofit.get_history.FwdMessages;
-import com.iskhakovayrat.aivk.retrofit.users.get.UsersGet;
+import com.iskhakovayrat.aivk.di.Injector;
+import com.iskhakovayrat.aivk.main.MainModel;
+import com.iskhakovayrat.aivk.model.get_history.FwdMessages;
+import com.iskhakovayrat.aivk.model.users.get.UsersGet;
+import com.iskhakovayrat.aivk.utils.DateConverter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class FwdMessagesAdapter extends RecyclerView.Adapter<FwdMessagesAdapter.ViewHolder> {
 
     private OnAttachmentClickListener onAttachmentClickListener;
-    private SimpleDateFormat format;
     private List<FwdMessages> items;
 
     private Api api;
     private TokenHolder tokenHolder;
 
+    @Inject
+    MainModel mainModel;
+
 
     public FwdMessagesAdapter(List<FwdMessages> items,
-                              OnAttachmentClickListener onAttachmentClickListener, TokenHolder tokenHolder) {
+                              OnAttachmentClickListener onAttachmentClickListener) {
+        Injector.inject(this);
         this.items = items;
         this.onAttachmentClickListener = onAttachmentClickListener;
-        this.tokenHolder = tokenHolder;
-        format = new SimpleDateFormat("dd MMM HH:mm");
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.vk.com/")
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(Api.class);
+        this.tokenHolder = mainModel.getTokenHolder();
+        this.api = mainModel.getApi();
     }
 
     @NonNull
@@ -67,6 +57,7 @@ public class FwdMessagesAdapter extends RecyclerView.Adapter<FwdMessagesAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         long sourcetId = items.get(position).getFromId();
+
         api.getProfileInfoCall(tokenHolder.getToken(), Api.V, sourcetId, "photo_50").enqueue(new Callback<UsersGet>() {
             @Override
             public void onResponse(Call<UsersGet> call, Response<UsersGet> response) {
@@ -83,9 +74,7 @@ public class FwdMessagesAdapter extends RecyclerView.Adapter<FwdMessagesAdapter.
             }
         });
         FwdMessages item = items.get(position);
-        Date date = new Date(item.getDate() * 1000);
-        String sDate = format.format(date);
-        holder.postDate.setText(sDate);
+        holder.postDate.setText(DateConverter.getFormatedDate(item.getDate()));
 
         if (item.getText() == null || item.getText().equals("")) {
             holder.postTextMain.setVisibility(View.GONE);

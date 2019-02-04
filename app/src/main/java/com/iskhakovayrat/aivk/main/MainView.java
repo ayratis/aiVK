@@ -1,6 +1,6 @@
 package com.iskhakovayrat.aivk.main;
 
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Response;
+import com.iskhakovayrat.aivk.model.newsfeed.Response;
 
 public interface MainView {
 

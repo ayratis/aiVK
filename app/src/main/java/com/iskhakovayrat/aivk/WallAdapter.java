@@ -10,49 +10,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.iskhakovayrat.aivk.retrofit.groups.getById.GroupsGetById;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.Wall;
-import com.iskhakovayrat.aivk.retrofit.users.get.UsersGet;
+import com.iskhakovayrat.aivk.di.Injector;
+import com.iskhakovayrat.aivk.main.MainModel;
+import com.iskhakovayrat.aivk.model.groups.getById.GroupsGetById;
+import com.iskhakovayrat.aivk.model.newsfeed.attachments.Wall;
+import com.iskhakovayrat.aivk.model.users.get.UsersGet;
+import com.iskhakovayrat.aivk.utils.DateConverter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import javax.inject.Inject;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class WallAdapter extends RecyclerView.Adapter<WallAdapter.ViewHolder> {
 
-    private OnAttachmentClickListener onAttachmentClickListener;
-    private SimpleDateFormat format;
-    private Wall item;
+    @Inject
+    MainModel mainModel;
 
+    private Wall item;
+    private OnAttachmentClickListener onAttachmentClickListener;
     private Api api;
     private TokenHolder tokenHolder;
 
-    public WallAdapter(Wall item, OnAttachmentClickListener onAttachmentClickListener, TokenHolder tokenHolder) {
+    public WallAdapter(Wall item, OnAttachmentClickListener onAttachmentClickListener) {
+        Injector.inject(this);
         this.item = item;
         this.onAttachmentClickListener = onAttachmentClickListener;
-        this.tokenHolder = tokenHolder;
-
-        format = new SimpleDateFormat("dd MMM HH:mm");
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.vk.com/")
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(Api.class);
+        this.api = mainModel.getApi();
+        this.tokenHolder = mainModel.getTokenHolder();
     }
 
     @NonNull
@@ -69,6 +56,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.ViewHolder> {
         long sourcetId = item.getFromId();
         if (sourcetId < 0) {
             sourcetId = Math.abs(sourcetId);
+
             api.getGroupsInfoCall(tokenHolder.getToken(), Api.V, sourcetId).enqueue(new Callback<GroupsGetById>() {
                 @Override
                 public void onResponse(Call<GroupsGetById> call, Response<GroupsGetById> response) {
@@ -103,9 +91,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.ViewHolder> {
             });
         }
 
-        Date date = new Date(item.getDate() * 1000);
-        String sDate = format.format(date);
-        holder.postDate.setText(sDate);
+        holder.postDate.setText(DateConverter.getFormatedDate(item.getDate()));
 
         if (item.getText() == null || item.getText().equals("")) {
             holder.postTextMain.setVisibility(View.GONE);

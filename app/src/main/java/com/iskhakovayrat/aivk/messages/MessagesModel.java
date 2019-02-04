@@ -2,15 +2,13 @@ package com.iskhakovayrat.aivk.messages;
 
 import com.iskhakovayrat.aivk.Api;
 import com.iskhakovayrat.aivk.Constants;
+import com.iskhakovayrat.aivk.LongPollApi;
 import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistory;
-import com.iskhakovayrat.aivk.retrofit.longpoll.LongPollHistory;
-import com.iskhakovayrat.aivk.retrofit.longpoll.LongPollHistoryResponse;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPoll;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPollServer;
-
-import org.json.JSONObject;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistory;
+import com.iskhakovayrat.aivk.model.longpoll.LongPollHistory;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPoll;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPollServer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,43 +16,18 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 public class MessagesModel {
 
     private Api api;
-    private Api longPollApi;
-    private OkHttpClient okHttpClient;
+    private LongPollApi longPollApi;
 
     TokenHolder tokenHolder;
 
-    public MessagesModel(TokenHolder tokenHolder) {
+    public MessagesModel(TokenHolder tokenHolder, Api api, LongPollApi longPollApi) {
         this.tokenHolder = tokenHolder;
-
-        okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(Api.class);
-
-        Retrofit longPollRetrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_LONGPOLL_URL)
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        longPollApi = longPollRetrofit.create(Api.class);
+        this.api = api;
+        this.longPollApi = longPollApi;
     }
 
     public Observable<ConversationGet> loadMessages(){
@@ -83,8 +56,8 @@ public class MessagesModel {
     }
 
     public Observable<LongPoll> longPolling(String server, String key, int ts){
-        return longPollApi.longPolling(server, Api.ACT, key, ts,
-                25, 2, Api.VERSION_LONGPOLL_DEFAULT)
+        return longPollApi.longPolling(server, LongPollApi.ACT, key, ts,
+                25, 2, LongPollApi.VERSION_LONGPOLL_DEFAULT)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 

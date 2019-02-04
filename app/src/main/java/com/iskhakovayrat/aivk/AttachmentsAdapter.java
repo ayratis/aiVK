@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Attachments;
+import com.iskhakovayrat.aivk.model.newsfeed.Attachments;
 
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.PhotoSizes;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.doc.Sizes;
+import com.iskhakovayrat.aivk.model.newsfeed.attachments.PhotoSizes;
+import com.iskhakovayrat.aivk.model.newsfeed.attachments.doc.Sizes;
 
 import java.util.List;
 

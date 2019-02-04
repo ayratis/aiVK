@@ -10,38 +10,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Groups;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.NewsfeedItems;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Profiles;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Response;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.Wall;
+import com.iskhakovayrat.aivk.model.newsfeed.Groups;
+import com.iskhakovayrat.aivk.model.newsfeed.NewsfeedItems;
+import com.iskhakovayrat.aivk.model.newsfeed.Profiles;
+import com.iskhakovayrat.aivk.model.newsfeed.Response;
+import com.iskhakovayrat.aivk.model.newsfeed.attachments.Wall;
+import com.iskhakovayrat.aivk.utils.DateConverter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
 public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.ViewHolder> {
 
     private OnAttachmentClickListener onAttachmentClickListener;
-    private SimpleDateFormat format;
     private List<NewsfeedItems> items;
     private List<Groups> groups;
     private List<Profiles> profiles;
 
     private LoadMore loadMore;
 
-    private TokenHolder tokenHolder;
 
     public NewsfeedAdapter(Response response,
                            OnAttachmentClickListener onAttachmentClickListener,
-                           LoadMore loadMore,
-                           TokenHolder tokenHolder) {
+                           LoadMore loadMore) {
         this.onAttachmentClickListener = onAttachmentClickListener;
-        format = new SimpleDateFormat("dd MMM HH:mm");
 
         this.loadMore = loadMore;
-        this.tokenHolder = tokenHolder;
 
         items = response.getItems();
         groups = response.getGroups();
@@ -79,9 +73,7 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.ViewHo
             }
         }
 
-        Date date = new Date(item.getDate()*1000);
-        String sDate = format.format(date);
-        holder.postDate.setText(sDate);
+        holder.postDate.setText(DateConverter.getFormatedDate(item.getDate()));
 
         if(item.getText() == null || item.getText().equals("")){
             holder.postTextMain.setVisibility(View.GONE);
@@ -96,15 +88,13 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.ViewHo
             holder.postTextMain.setText(text);
         }
 
-
-
         if(item.getCopyHistory() != null){
             Wall wall = new Wall();
             wall.setDate(item.getCopyHistory().get(0).getDate());
             wall.setFromId((int) item.getCopyHistory().get(0).getOwnerId());
             wall.setText(item.getCopyHistory().get(0).getText());
             wall.setAttachments(item.getCopyHistory().get(0).getAttachments());
-            WallAdapter wallAdapter = new WallAdapter(wall, onAttachmentClickListener, tokenHolder);
+            WallAdapter wallAdapter = new WallAdapter(wall, onAttachmentClickListener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
             holder.unRecyclerView.setLayoutManager(layoutManager);
             holder.unRecyclerView.setAdapter(wallAdapter);
@@ -190,7 +180,5 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.ViewHo
         profiles.addAll(newProfiles);
 
         notifyItemInserted(getItemCount()-1);
-
-//        notifyDataSetChanged();
     }
 }

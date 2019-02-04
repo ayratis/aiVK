@@ -13,13 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Conversation;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Peer;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Profiles;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistory;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistoryResponse;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Attachments;
+import com.iskhakovayrat.aivk.model.get_conversation.Conversation;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.model.get_conversation.Peer;
+import com.iskhakovayrat.aivk.model.get_conversation.Profiles;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistory;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistoryResponse;
+import com.iskhakovayrat.aivk.model.newsfeed.Attachments;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,18 +36,15 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
     private SimpleDateFormat format;
     private Conversation conversation;
 
-    private TokenHolder tokenHolder;
 
     public ConversationRecyclerAdapter(ConversationHistoryResponse conversationHistoryResponse,
                                        OnAttachmentClickListener onAttachmentClickListener,
-                                       LoadMore loadMore,
-                                       TokenHolder tokenHolder) {
+                                       LoadMore loadMore) {
         items = conversationHistoryResponse.getItems();
         profiles = conversationHistoryResponse.getProfiles();
         peer = conversationHistoryResponse.getConversations().get(0).getPeer();
         this.loadMore = loadMore;
         this.onAttachmentClickListener = onAttachmentClickListener;
-        this.tokenHolder = tokenHolder;
         messageCount = conversationHistoryResponse.getCount();
         format = new SimpleDateFormat("dd MMM HH:mm");
         conversation = conversationHistoryResponse.getConversations().get(0);
@@ -108,7 +105,7 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
         if (items.get(position).getFwdMessages() != null && !items.get(position).getFwdMessages().isEmpty()) {
             holder.attachmentsRecycler.setVisibility(View.VISIBLE);
             FwdMessagesAdapter fwdMessagesAdapter =
-                    new FwdMessagesAdapter(items.get(position).getFwdMessages(), onAttachmentClickListener, tokenHolder);
+                    new FwdMessagesAdapter(items.get(position).getFwdMessages(), onAttachmentClickListener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
             holder.attachmentsRecycler.setLayoutManager(layoutManager);
             holder.attachmentsRecycler.setAdapter(fwdMessagesAdapter);
@@ -117,7 +114,7 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
             if (items.get(position).getAttachments().get(0).getType().equals(Attachments.Type.WALL)) {
                 holder.attachmentsRecycler.setVisibility(View.VISIBLE);
                 WallAdapter wallAdapter = new WallAdapter(items.get(position).getAttachments().get(0).getWall(),
-                        onAttachmentClickListener, tokenHolder);
+                        onAttachmentClickListener);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
                 holder.attachmentsRecycler.setLayoutManager(layoutManager);
                 holder.attachmentsRecycler.setAdapter(wallAdapter);

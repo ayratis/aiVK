@@ -5,39 +5,25 @@ import android.media.MediaPlayer;
 
 import com.iskhakovayrat.aivk.Api;
 import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.NewsfeedResponse;
-import com.iskhakovayrat.aivk.retrofit.video.VideoResponseResponse;
+import com.iskhakovayrat.aivk.model.newsfeed.NewsfeedResponse;
+import com.iskhakovayrat.aivk.model.video.VideoResponseResponse;
 
 import java.io.IOException;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainModel {
 
     private Api api;
-
     private TokenHolder tokenHolder;
+    private MediaPlayer mp;
 
-    public MainModel(TokenHolder tokenHolder) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(Api.class);
-
+    public MainModel(TokenHolder tokenHolder, Api api, MediaPlayer mp) {
+        this.api = api;
         this.tokenHolder = tokenHolder;
+        this.mp = mp;
     }
 
     public Observable<NewsfeedResponse> getNewsFeed(int count){
@@ -61,14 +47,21 @@ public class MainModel {
     }
 
     public void audioPlayer(String url){
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(url);
+            mp.setDataSource(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mediaPlayer.prepareAsync();
-        mediaPlayer.setOnPreparedListener(mp -> mediaPlayer.start());
+        mp.prepareAsync();
+        mp.setOnPreparedListener(MediaPlayer::start);
+    }
+
+    public TokenHolder getTokenHolder() {
+        return tokenHolder;
+    }
+
+    public Api getApi() {
+        return api;
     }
 }
