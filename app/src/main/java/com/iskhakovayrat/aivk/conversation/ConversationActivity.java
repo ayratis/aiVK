@@ -16,14 +16,18 @@ import com.iskhakovayrat.aivk.ConversationRecyclerAdapter;
 import com.iskhakovayrat.aivk.LoadMore;
 import com.iskhakovayrat.aivk.OnAttachmentClickListener;
 import com.iskhakovayrat.aivk.R;
-import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistory;
+import com.iskhakovayrat.aivk.di.Injector;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistory;
+
+import javax.inject.Inject;
 
 public class ConversationActivity extends AppCompatActivity implements ConversationView {
 
+    @Inject
+    ConversationPresenter presenter;
+
     public static final String PEER_ID_KEY = "peer_id";
-    private ConversationPresenter presenter;
 
     private TextView title;
     private RecyclerView recyclerView;
@@ -39,6 +43,7 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
@@ -55,7 +60,6 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
         sendMessageButon.setOnClickListener(view -> presenter.sendMessage(editText.getText().toString()));
 
         String peerId = getIntent().getStringExtra(PEER_ID_KEY);
-        presenter = new ConversationPresenter(new TokenHolder(this));
         presenter.attach(this, Integer.valueOf(peerId));
 
         loadMore = nextMessageId -> presenter.getConversationHistoryNext(nextMessageId);
@@ -74,7 +78,7 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         adapter = new ConversationRecyclerAdapter(conversationHistory.getResponse(),
-                onAttachmentClickListener, loadMore, new TokenHolder(this));
+                onAttachmentClickListener, loadMore);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }

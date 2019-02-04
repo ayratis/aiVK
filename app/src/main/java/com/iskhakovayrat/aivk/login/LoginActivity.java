@@ -8,22 +8,26 @@ import android.webkit.WebViewClient;
 
 import com.iskhakovayrat.aivk.R;
 import com.iskhakovayrat.aivk.TokenHolder;
+import com.iskhakovayrat.aivk.di.Injector;
 import com.iskhakovayrat.aivk.main.MainActivity;
+
+import javax.inject.Inject;
 
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
+    @Inject LoginPresenter presenter;
+
     private WebView uiLogin;
-    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         uiLogin = findViewById(R.id.loginContainer);
 
-        presenter = new LoginPresenter(new TokenHolder(this));
         presenter.attach(this);
 
         initWebView();

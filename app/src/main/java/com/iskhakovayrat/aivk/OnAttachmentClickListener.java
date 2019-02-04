@@ -1,8 +1,6 @@
 package com.iskhakovayrat.aivk;
 
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Attachments;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.Link;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.attachments.Video;
+import com.iskhakovayrat.aivk.model.newsfeed.Attachments;
 
 public interface OnAttachmentClickListener {
 

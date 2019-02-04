@@ -9,12 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationResponse;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Groups;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Items;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.Profiles;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationResponse;
+import com.iskhakovayrat.aivk.model.get_conversation.Groups;
+import com.iskhakovayrat.aivk.model.get_conversation.Items;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.model.get_conversation.Profiles;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;

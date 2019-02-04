@@ -1,7 +1,7 @@
 package com.iskhakovayrat.aivk.messages;
 
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
 
 public interface MessagesView {
 

@@ -1,13 +1,12 @@
 package com.iskhakovayrat.aivk.conversation;
 
 import com.iskhakovayrat.aivk.Constants;
-import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.LastMessage;
-import com.iskhakovayrat.aivk.retrofit.get_history.ConversationHistory;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPoll;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPollServer;
-import com.iskhakovayrat.aivk.retrofit.messages.send.SendMessageResult;
-import com.iskhakovayrat.aivk.retrofit.newsfeed.Attachments;
+import com.iskhakovayrat.aivk.model.get_conversation.LastMessage;
+import com.iskhakovayrat.aivk.model.get_history.ConversationHistory;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPoll;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPollServer;
+import com.iskhakovayrat.aivk.model.messages.send.SendMessageResult;
+import com.iskhakovayrat.aivk.model.newsfeed.Attachments;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,8 +40,8 @@ public class ConversationPresenter {
     private AtomicInteger ts;
 
 
-    public ConversationPresenter(TokenHolder tokenHolder) {
-        model = new ConversationModel(tokenHolder);
+    public ConversationPresenter(ConversationModel conversationModel) {
+        model = conversationModel;
     }
 
     public void attach(ConversationView conversationView, int id) {

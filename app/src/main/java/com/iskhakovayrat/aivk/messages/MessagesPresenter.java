@@ -1,10 +1,8 @@
 package com.iskhakovayrat.aivk.messages;
 
 import com.iskhakovayrat.aivk.Constants;
-import com.iskhakovayrat.aivk.TokenHolder;
-import com.iskhakovayrat.aivk.retrofit.get_conversation.ConversationGet;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPoll;
-import com.iskhakovayrat.aivk.retrofit.longpoll_server.LongPollServer;
+import com.iskhakovayrat.aivk.model.get_conversation.ConversationGet;
+import com.iskhakovayrat.aivk.model.longpoll_server.LongPollServer;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +18,6 @@ public class MessagesPresenter {
     private MessagesView view;
     private MessagesModel model;
 
-    private TokenHolder tokenHolder;
 
     private Disposable messagesDisposable;
     private Disposable longpollServerDisposabe;
@@ -31,19 +28,17 @@ public class MessagesPresenter {
 
     private String key;
     private String server;
-    private int firstTs;
     private AtomicInteger ts;
 
 
-    public MessagesPresenter(TokenHolder tokenHolder) {
-        this.tokenHolder = tokenHolder;
-        model = new MessagesModel(tokenHolder);
+    public MessagesPresenter(MessagesModel messagesModel) {
+        model = messagesModel;
     }
 
     public void attach(MessagesView messagesView) {
         this.view = messagesView;
         loadMessages();
-        longPoll1();
+        longPoll();
     }
 
     public void detach() {
@@ -98,43 +93,6 @@ public class MessagesPresenter {
     }
 
     private void longPoll() {
-        if (longpollServerDisposabe == null) {
-            longpollServerDisposabe = model.loadLongPollServer()
-                    .doOnTerminate(() -> {
-                        longpollServerDisposabe.dispose();
-                        longpollServerDisposabe = null;
-                    })
-                    .map(LongPollServer::getResponse)
-                    .subscribe(longPollServer -> {
-                        server = longPollServer.getServer();
-                        key = longPollServer.getKey();
-                        firstTs = longPollServer.getTs();
-                        Observable<LongPollParams> keyWithTsObservable = Observable.just(new LongPollParams(server, key, firstTs));
-                        Observable<LongPoll> o = keyWithTsObservable
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .flatMap(keyWithTs -> {
-                                    ts = new AtomicInteger(keyWithTs.ts);
-                                    return Observable.just(keyWithTs.key)
-                                            .flatMap(key -> model.longPolling(server, key, ts.get()))
-                                            .doOnNext(longPoll -> {
-                                                ts.set(longPoll.getTs());
-                                                if(longPoll.getUpdates() != null && !longPoll.getUpdates().isEmpty()){
-                                                    getUnreadMessages(longPoll.getUpdates());
-                                                }
-                                            })
-                                            .repeat();
-                                })
-                                .retry()
-                                .share();
-
-                        longPollDisposable = o.subscribe();
-                    });
-        }
-
-    }
-
-    private void longPoll1() {
         if (longpollServerDisposabe == null) {
             longpollServerDisposabe = model.loadLongPollServer()
                     .doOnTerminate(() -> {
@@ -207,18 +165,6 @@ public class MessagesPresenter {
                             });
         }
 
-    }
-
-    private static class LongPollParams {
-        public final String server;
-        public final String key;
-        public final int ts;
-
-        public LongPollParams(String server, String key, int ts) {
-            this.server = server;
-            this.key = key;
-            this.ts = ts;
-        }
     }
 
     public void getDialog(String peerId) {
