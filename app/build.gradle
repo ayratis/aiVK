@@ -9,6 +9,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "AUTH_URL", "\"https://oauth.vk.com/authorize\""
+        buildConfigField "String", "REDIRECT_AUTH_URL", "\"https://oauth.vk.com/blank.html\""
+        buildConfigField "String", "CLIENT_ID", "\"6695831\""
+        buildConfigField "String", "API_BASE_URL", "\"https://api.vk.com\""
+        buildConfigField "String", "API_VERSION", "\"5.80\""
+        buildConfigField "String", "BASE_LONGPOLL_API", "\"https://imv4.vk.com/\""
     }
     buildTypes {
         release {
