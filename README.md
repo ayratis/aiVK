@@ -12,3 +12,4 @@
 * Retrofit
 * RxJava 2
 * Glide
+* Dagger 2
