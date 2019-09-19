@@ -1,6 +1,8 @@
 # aiVK
 
-## Application for show news on the social network VKontakte. Official website vk.com
+## Application for show news on the social network VKontakte.
+
+### Official website https://vk.com
 
 ### Api - https://api.vk.com
 
